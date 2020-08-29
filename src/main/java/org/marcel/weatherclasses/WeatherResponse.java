@@ -15,6 +15,9 @@ public class WeatherResponse {
 
     private Wind wind;
 
+
+
+
     public int getTemperature() {
         return temperature;
     }

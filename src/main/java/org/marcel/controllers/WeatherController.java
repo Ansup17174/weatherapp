@@ -1,15 +1,27 @@
 package org.marcel.controllers;
 
 
+import org.marcel.services.OnetWeatherService;
 import org.marcel.weatherclasses.WeatherRequest;
+import org.marcel.weatherclasses.WeatherResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 public class WeatherController {
+
+    private OnetWeatherService onetWeatherService;
+
+
+    @Autowired
+    public WeatherController(OnetWeatherService onetWeatherService) {
+        this.onetWeatherService = onetWeatherService;
+    }
 
     @GetMapping("/get_weather")
     public ResponseEntity getWeather() {
@@ -17,7 +29,13 @@ public class WeatherController {
     }
 
     @PostMapping("/get_weather")
-    public ResponseEntity getWeather(@Valid @RequestBody WeatherRequest weatherRequest) {
-        return new ResponseEntity(weatherRequest, HttpStatus.OK);
+    public ResponseEntity getWeather(@Valid @RequestBody WeatherRequest weatherRequest) throws IOException {
+
+        WeatherResponse weatherResponse = onetWeatherService.getWeather(
+                weatherRequest.getPlace(),
+                weatherRequest.getDate()
+        );
+
+        return new ResponseEntity(weatherResponse, HttpStatus.OK);
     }
 }
