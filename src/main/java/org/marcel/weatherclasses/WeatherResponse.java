@@ -13,10 +13,7 @@ public class WeatherResponse {
 
     private double airPressure;
 
-    private Wind wind;
-
-
-
+    private int windVelocity;
 
     public int getTemperature() {
         return temperature;
@@ -42,11 +39,11 @@ public class WeatherResponse {
         this.airPressure = airPressure;
     }
 
-    public Wind getWind() {
-        return wind;
+    public int getWindVelocity() {
+        return windVelocity;
     }
 
-    public void setWind(Wind wind) {
-        this.wind = wind;
+    public void setWindVelocity(int windVelocity) {
+        this.windVelocity = windVelocity;
     }
 }

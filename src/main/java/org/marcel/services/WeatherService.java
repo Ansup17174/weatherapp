@@ -4,12 +4,14 @@ package org.marcel.services;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.marcel.weatherclasses.WeatherResponse;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,6 +28,9 @@ public class WeatherService {
 
         Optional<WeatherResponse> onetResponse = onetWeatherResponse(links);
 
+        if (onetResponse.isPresent()) {
+            return onetResponse.get();
+        }
 
         return new WeatherResponse();
     }
@@ -42,14 +47,29 @@ public class WeatherService {
 
             String temperatureString = onetPage.selectFirst("div.temp").text();
             int temperatureValue = Integer.parseInt(temperatureString.replace("°", ""));
-            System.out.println(temperatureValue);
 
             Element weatherDescDiv = onetPage.selectFirst("div.forecastDesc");
             String weatherDesc = weatherDescDiv.text();
-            System.out.println(weatherDesc);
 
+            Element weatherParams = onetPage.selectFirst("div.weatherParams>ul");
+            List<String> windAndAirPressure = weatherParams.children().stream()
+                    .map(li -> li.children())
+                    .filter(twoSpans -> "Ciśnienie atmosferyczne".equals(twoSpans.get(0).text())
+                    || "Wiatr".equals(twoSpans.get(0).text()))
+                    .map(twoSpans -> twoSpans.get(1).text())
+                    .collect(Collectors.toList());  // [wind, air pressure]
+
+            int windVelocity = Integer.parseInt(windAndAirPressure.get(0).replace(" km/h", ""));
+            int airPressure = Integer.parseInt(windAndAirPressure.get(1).replace(" hPa", ""));
+
+            WeatherResponse onetResponse = new WeatherResponse();
+            onetResponse.setTemperature(temperatureValue);
+            onetResponse.setWeatherState(weatherDesc);
+            onetResponse.setWindVelocity(windVelocity);
+            onetResponse.setAirPressure(airPressure);
+
+            return Optional.of(onetResponse);
         }
-
         return Optional.empty();
     }
 }
