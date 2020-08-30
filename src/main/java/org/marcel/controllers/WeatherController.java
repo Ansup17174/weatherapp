@@ -1,7 +1,7 @@
 package org.marcel.controllers;
 
 
-import org.marcel.services.OnetWeatherService;
+import org.marcel.services.WeatherService;
 import org.marcel.weatherclasses.WeatherRequest;
 import org.marcel.weatherclasses.WeatherResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +15,11 @@ import java.io.IOException;
 @RestController
 public class WeatherController {
 
-    private OnetWeatherService onetWeatherService;
+    private WeatherService onetWeatherService;
 
 
     @Autowired
-    public WeatherController(OnetWeatherService onetWeatherService) {
+    public WeatherController(WeatherService onetWeatherService) {
         this.onetWeatherService = onetWeatherService;
     }
 

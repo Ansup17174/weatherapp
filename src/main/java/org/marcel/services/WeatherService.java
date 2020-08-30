@@ -1,12 +1,45 @@
 package org.marcel.services;
 
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.marcel.weatherclasses.WeatherResponse;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-public interface WeatherService {
+@Service
+public class WeatherService {
 
-    public WeatherResponse getWeather(String place, LocalDate date) throws IOException;
+    public WeatherResponse getWeather(String place, LocalDate date) throws IOException {
 
+        Document googleSite = Jsoup.connect("https://www.google.pl/search?q=pogoda " + place).get();
+        Elements resultDivs = googleSite.select("div.r");
+        Elements links = resultDivs.select("a[href][ping]");
+
+        Optional<WeatherResponse> onetResponse = onetWeatherResponse(links);
+
+
+        return new WeatherResponse();
+    }
+
+
+    private Optional<WeatherResponse> onetWeatherResponse(Elements links) throws IOException {
+        Optional<Element> onetLink = links.stream()
+                .filter(link -> link.attr("href").contains("onet"))
+                .findFirst();
+
+        if (onetLink.isPresent()) {
+            Document onetPage = Jsoup.connect(onetLink.get().attr("href")).get();
+            String temperature = onetPage.select("div.temp").first().text();
+            System.out.println(temperature);
+        }
+
+        return Optional.empty();
+    }
 }
