@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,8 +38,10 @@ public class WeatherService {
 
         if (onetLink.isPresent()) {
             Document onetPage = Jsoup.connect(onetLink.get().attr("href")).get();
-            String temperature = onetPage.select("div.temp").first().text();
-            System.out.println(temperature);
+            String temperatureString = onetPage.select("div.temp").first().text();
+            int tempValue = Integer.parseInt(temperatureString.replace("°", ""));
+            System.out.println(tempValue);
+            
         }
 
         return Optional.empty();
