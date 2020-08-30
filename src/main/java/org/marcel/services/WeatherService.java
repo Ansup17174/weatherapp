@@ -37,11 +37,17 @@ public class WeatherService {
                 .findFirst();
 
         if (onetLink.isPresent()) {
+
             Document onetPage = Jsoup.connect(onetLink.get().attr("href")).get();
-            String temperatureString = onetPage.select("div.temp").first().text();
-            int tempValue = Integer.parseInt(temperatureString.replace("°", ""));
-            System.out.println(tempValue);
-            
+
+            String temperatureString = onetPage.selectFirst("div.temp").text();
+            int temperatureValue = Integer.parseInt(temperatureString.replace("°", ""));
+            System.out.println(temperatureValue);
+
+            Element weatherDescDiv = onetPage.selectFirst("div.forecastDesc");
+            String weatherDesc = weatherDescDiv.text();
+            System.out.println(weatherDesc);
+
         }
 
         return Optional.empty();

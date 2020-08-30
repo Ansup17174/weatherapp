@@ -9,7 +9,7 @@ public class WeatherResponse {
 
     private int temperature;
 
-    private WeatherState weatherState;
+    private String weatherState;
 
     private double airPressure;
 
@@ -26,11 +26,11 @@ public class WeatherResponse {
         this.temperature = temperature;
     }
 
-    public WeatherState getWeatherState() {
+    public String getWeatherState() {
         return weatherState;
     }
 
-    public void setWeatherState(WeatherState weatherState) {
+    public void setWeatherState(String weatherState) {
         this.weatherState = weatherState;
     }
 
