@@ -20,18 +20,21 @@ public class WeatherService {
 
     public List<WeatherResponse> getWeather(String place, LocalDate date) throws IOException {
 
-        List<WeatherResponse> weatherResponses = new ArrayList<>();
+        List<Optional<WeatherResponse>> weatherResponses = new ArrayList<>();
 
         Document googleSite = Jsoup.connect("https://www.google.pl/search?q=pogoda " + place).get();
         Elements resultDivs = googleSite.select("div.r");
         Elements links = resultDivs.select("a[href][ping]");
 
         Optional<WeatherResponse> onetResponse = OnetWeatherService.getResponse(links);
+        Optional<WeatherResponse> wpResponse = WpWeatherService.getResponse(links);
 
-        if (onetResponse.isPresent()) {
-            weatherResponses.add(onetResponse.get());
-        }
+        weatherResponses.add(onetResponse);
+        weatherResponses.add(wpResponse);
 
-        return weatherResponses;
+        return weatherResponses.stream()
+                .filter(Optional::isPresent)
+                .map(optional -> optional.get())
+                .collect(Collectors.toList());
     }
 }

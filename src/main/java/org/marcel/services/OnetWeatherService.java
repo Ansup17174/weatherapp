@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 public class OnetWeatherService {
 
     public static Optional<WeatherResponse> getResponse(Elements links) throws IOException {
