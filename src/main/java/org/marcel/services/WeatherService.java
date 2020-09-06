@@ -4,13 +4,13 @@ package org.marcel.services;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.marcel.weatherclasses.WeatherResponse;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,7 +18,9 @@ import java.util.stream.Collectors;
 @Service
 public class WeatherService {
 
-    public WeatherResponse getWeather(String place, LocalDate date) throws IOException {
+    public List<WeatherResponse> getWeather(String place, LocalDate date) throws IOException {
+
+        List<WeatherResponse> weatherResponses = new ArrayList<>();
 
         Document googleSite = Jsoup.connect("https://www.google.pl/search?q=pogoda " + place).get();
         Elements resultDivs = googleSite.select("div.r");
@@ -27,10 +29,10 @@ public class WeatherService {
         Optional<WeatherResponse> onetResponse = onetWeatherResponse(links);
 
         if (onetResponse.isPresent()) {
-            return onetResponse.get();
+            weatherResponses.add(onetResponse.get());
         }
 
-        return new WeatherResponse();
+        return weatherResponses;
     }
 
 

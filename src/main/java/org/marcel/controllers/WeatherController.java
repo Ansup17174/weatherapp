@@ -11,16 +11,17 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 public class WeatherController {
 
-    private WeatherService onetWeatherService;
+    private WeatherService weatherService;
 
 
     @Autowired
     public WeatherController(WeatherService onetWeatherService) {
-        this.onetWeatherService = onetWeatherService;
+        this.weatherService = onetWeatherService;
     }
 
     @GetMapping("/get_weather")
@@ -31,11 +32,11 @@ public class WeatherController {
     @PostMapping("/get_weather")
     public ResponseEntity getWeather(@Valid @RequestBody WeatherRequest weatherRequest) throws IOException {
 
-        WeatherResponse weatherResponse = onetWeatherService.getWeather(
+        List<WeatherResponse> weatherResponses = weatherService.getWeather(
                 weatherRequest.getPlace(),
                 weatherRequest.getDate()
         );
 
-        return new ResponseEntity(weatherResponse, HttpStatus.OK);
+        return new ResponseEntity(weatherResponses, HttpStatus.OK);
     }
 }
