@@ -5,7 +5,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.marcel.weatherclasses.WeatherResponse;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,7 @@ public class OnetWeatherService {
 
             Element weatherParams = onetPage.selectFirst("div.weatherParams>ul");
             List<String> windAndAirPressure = weatherParams.children().stream()
-                    .map(li -> li.children())
+                    .map(Element::children)
                     .filter(twoSpans -> "Ciśnienie atmosferyczne".equals(twoSpans.get(0).text())
                             || "Wiatr".equals(twoSpans.get(0).text()))
                     .map(twoSpans -> twoSpans.get(1).text())

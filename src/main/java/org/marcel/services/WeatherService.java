@@ -28,9 +28,11 @@ public class WeatherService {
 
         Optional<WeatherResponse> onetResponse = OnetWeatherService.getResponse(links);
         Optional<WeatherResponse> wpResponse = WpWeatherService.getResponse(links);
+        Optional<WeatherResponse> interiaResponse = InteriaWeatherService.getWeather(links);
 
         weatherResponses.add(onetResponse);
         weatherResponses.add(wpResponse);
+        weatherResponses.add(interiaResponse);
 
         return weatherResponses.stream()
                 .filter(Optional::isPresent)
