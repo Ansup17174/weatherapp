@@ -26,7 +26,7 @@ public class WeatherController {
 
     @GetMapping("/get_weather")
     public ResponseEntity getWeather() {
-        return new ResponseEntity("sram", HttpStatus.OK);
+        return new ResponseEntity("aaa", HttpStatus.OK);
     }
 
     @PostMapping("/get_weather")
